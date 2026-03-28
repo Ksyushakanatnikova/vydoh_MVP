@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Выдох — дневной ритуал свежести</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;700&family=Onest:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0A0A0A;
+    --black-2: #111111;
+    --black-3: #181818;
+    --her-1: #B8DEC0; --her-2: #C8EDD0; --her-3: #D8F0DC; --her-mid: #74A87C;
+    --him-1: #A8C4D4; --him-2: #B8D4E4; --him-3: #C8E0EE; --him-mid: #6A96AA;
+    --white: #F5F5F0;
+    --tl: #777; --tm: #444;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--white);font-family:'Onest',sans-serif;font-size:15px;line-height:1.6;cursor:none;overflow-x:hidden}
+
+  .cursor{width:10px;height:10px;border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .4s;background:var(--her-1)}
+  .cursor-ring{width:32px;height:32px;border:1px solid var(--her-1);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.4;transition:width .2s,height .2s,border-color .4s}
+  body.him .cursor{background:var(--him-1)}
+  body.him .cursor-ring{border-color:var(--him-1)}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.04)}
+  .logo{font-family:'Unbounded',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.5px;color:var(--white);text-decoration:none}
+  .logo .lh{color:var(--her-1);transition:opacity .3s}
+  .logo .lm{color:var(--him-1);opacity:0;position:absolute;transition:opacity .3s}
+  body.him .logo .lh{opacity:0}
+  body.him .logo .lm{opacity:1}
+
+  .mode-tabs{display:flex;gap:4px;background:rgba(255,255,255,.05);border-radius:40px;padding:4px}
+  .mtab{padding:8px 22px;border-radius:30px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--tl);transition:all .25s}
+  .mtab.her.on{background:var(--her-1);color:var(--black)}
+  .mtab.him.on{background:var(--him-1);color:var(--black)}
+
+  .nav-links{display:flex;gap:28px;list-style:none}
+  .nav-links a{color:var(--tl);text-decoration:none;font-size:12px;letter-spacing:.07em;text-transform:uppercase;transition:color .2s}
+  .nav-links a:hover{color:var(--white)}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;align-items:center;padding:120px 48px 80px;position:relative;overflow:hidden}
+  .hbg{position:absolute;inset:0;pointer-events:none}
+  .hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:64px 64px}
+  .hglow{position:absolute;width:800px;height:800px;border-radius:50%;top:50%;left:60%;transform:translate(-50%,-50%);filter:blur(120px);transition:background 1s;background:radial-gradient(circle,rgba(184,222,192,.06) 0%,transparent 70%)}
+  body.him .hglow{background:radial-gradient(circle,rgba(168,196,212,.06) 0%,transparent 70%)}
+  .hcontent{position:relative;z-index:2;max-width:560px}
+  .heyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:12px;transition:color .4s;color:var(--her-mid)}
+  body.him .heyebrow{color:var(--him-mid)}
+  .heyebrow::before{content:'';width:28px;height:1px;background:currentColor}
+  .htitle{font-family:'Unbounded',sans-serif;font-size:clamp(52px,8vw,96px);font-weight:700;line-height:.92;letter-spacing:-3px;margin-bottom:28px}
+  .ha{transition:color .4s;color:var(--her-1)}
+  body.him .ha{color:var(--him-1)}
+  .hsub{font-size:16px;color:var(--tl);line-height:1.7;margin-bottom:44px;max-width:460px}
+  .hsub strong{color:var(--white);font-weight:400}
+  .hactions{display:flex;gap:16px;align-items:center}
+  .btnp{padding:13px 30px;border-radius:40px;font-size:14px;font-weight:500;text-decoration:none;transition:all .2s;background:var(--her-1);color:var(--black)}
+  body.him .btnp{background:var(--him-1)}
+  .btnp:hover{transform:translateY(-2px);filter:brightness(1.08)}
+  .btng{color:var(--tl);font-size:13px;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s}
+  .btng:hover{color:var(--white)}
+  .btng::after{content:'→';transition:transform .2s}
+  .btng:hover::after{transform:translateX(4px)}
+
+  /* TICKER */
+  .ticker-wrap{overflow:hidden;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);padding:13px 0;background:var(--black-2)}
+  .ticker{display:flex;animation:tick 22s linear infinite;white-space:nowrap}
+  .ti{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--tl);padding:0 36px;display:flex;align-items:center;gap:36px}
+  .td{width:3px;height:3px;border-radius:50%;display:inline-block}
+  .tdh{background:var(--her-1)}.tdm{background:var(--him-1)}
+  @keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  /* GENDER SPLIT */
+  .gsplit{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(255,255,255,.04)}
+  .gpanel{padding:80px 52px;position:relative;overflow:hidden;cursor:pointer;transition:background .3s}
+
+  .pvis img{width:100%;height:100%;object-fit:cover;display:block;border-radius:0;position:absolute;inset:0}
+  .gher-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;z-index:0;pointer-events:none}
+  .ghim-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;z-index:0;pointer-events:none}
+  .gpanel{position:relative}
+  .gher{background:var(--black-2)}
+  .ghim{background:var(--black-3);border-left:1px solid rgba(255,255,255,.04)}
+  .gpanel::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .4s;pointer-events:none}
+  .gher::after{background:radial-gradient(ellipse 70% 70% at 20% 50%,rgba(184,222,192,.06) 0%,transparent 70%)}
+  .ghim::after{background:radial-gradient(ellipse 70% 70% at 80% 50%,rgba(168,196,212,.06) 0%,transparent 70%)}
+  .gpanel:hover::after{opacity:1}
+
+  .gfor{font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+  .gfor::before{content:'';width:20px;height:1px;background:currentColor}
+  .gher .gfor{color:var(--her-mid)}
+  .ghim .gfor{color:var(--him-mid)}
+  .gtitle{font-family:'Unbounded',sans-serif;font-size:clamp(36px,4.5vw,58px);font-weight:700;letter-spacing:-2px;line-height:.95;margin-bottom:20px}
+  .gher .gtitle{color:var(--her-1)}
+  .ghim .gtitle{color:var(--him-1)}
+  .gsub{font-size:15px;color:var(--tl);line-height:1.7;max-width:360px;margin-bottom:36px}
+  .gpills{display:flex;flex-direction:column;gap:9px;margin-bottom:32px}
+  .gpill{background:rgba(255,255,255,.04);border-radius:11px;padding:13px 15px;border:1px solid rgba(255,255,255,.06);transition:border-color .25s;display:flex;align-items:center;justify-content:space-between}
+  .gher .gpill:hover{border-color:rgba(184,222,192,.25)}
+  .ghim .gpill:hover{border-color:rgba(168,196,212,.25)}
+  .gpill-l{display:flex;flex-direction:column;gap:2px}
+  .gpill-name{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:500;letter-spacing:-.3px}
+  .gher .gpill-name{color:var(--her-1)}
+  .ghim .gpill-name{color:var(--him-1)}
+  .gpill-trigger{font-size:11px;color:var(--tl)}
+  .gpill-price{font-size:13px;font-weight:500;color:var(--tm)}
+  .gcta{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:40px;font-size:13px;font-weight:500;text-decoration:none;transition:all .2s;border:1px solid}
+  .gher .gcta{border-color:var(--her-1);color:var(--her-1)}
+  .gher .gcta:hover{background:var(--her-1);color:var(--black)}
+  .ghim .gcta{border-color:var(--him-1);color:var(--him-1)}
+  .ghim .gcta:hover{background:var(--him-1);color:var(--black)}
+  .gcta::after{content:'→';transition:transform .2s}
+  .gcta:hover::after{transform:translateX(4px)}
+
+  .gmocks{position:absolute;right:36px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;opacity:.6;pointer-events:none}
+  .gmock{width:124px;border-radius:13px;padding:13px;background:rgba(10,10,10,.85);border:1px solid rgba(255,255,255,.07)}
+  .gmt{font-size:8px;letter-spacing:.1em;text-transform:uppercase;opacity:.45;margin-bottom:5px}
+  .gmn{font-family:'Unbounded',sans-serif;font-size:13px;font-weight:500;margin-bottom:8px;letter-spacing:-.3px}
+  .gmb{height:2px;border-radius:1px;width:100%}
+
+  /* DIVIDER */
+  .sdiv{display:flex;align-items:center;justify-content:center;padding:50px 48px;gap:28px;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04)}
+  .sdl{flex:1;height:1px}
+  .sdl.h{background:linear-gradient(90deg,transparent,var(--her-1))}
+  .sdl.m{background:linear-gradient(90deg,var(--him-1),transparent)}
+  .sdb{font-family:'Unbounded',sans-serif;font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--tl);padding:8px 18px;border:1px solid rgba(255,255,255,.08);border-radius:40px;white-space:nowrap}
+
+  /* PRODUCTS */
+  .prods{padding:100px 48px}
+  .prods-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:52px;flex-wrap:wrap;gap:24px}
+  .slabel{font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;color:var(--tl);display:flex;align-items:center;gap:10px}
+  .slabel::before{content:'';width:20px;height:1px;background:currentColor}
+  .stitle{font-family:'Unbounded',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:500;letter-spacing:-1.5px;line-height:1.05}
+  .ptabs{display:flex;gap:4px;background:rgba(255,255,255,.04);border-radius:40px;padding:4px}
+  .ptab{padding:8px 20px;border-radius:30px;font-size:13px;cursor:pointer;transition:all .25s;color:var(--tl);border:none;background:transparent}
+  .ptab.her.on{background:var(--her-1);color:var(--black);font-weight:500}
+  .ptab.him.on{background:var(--him-1);color:var(--black);font-weight:500}
+  .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+  .pc{background:var(--black-2);border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.04);transition:all .3s}
+  .pc:hover{transform:translateY(-4px)}
+  .pc.hp:hover{border-color:rgba(184,222,192,.2)}
+  .pc.mp:hover{border-color:rgba(168,196,212,.2)}
+  .pvis{aspect-ratio:1/1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .pmock{width:108px;height:154px;border-radius:14px;padding:13px 11px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;background:var(--black);box-shadow:0 16px 48px rgba(0,0,0,.5);transition:transform .3s}
+  .pc:hover .pmock{transform:scale(1.05) rotate(-1deg)}
+  .pmt{font-size:8px;letter-spacing:.1em;text-transform:uppercase;opacity:.45}
+  .pmn{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:500;text-align:center;letter-spacing:-.3px;line-height:1.1}
+  .pmf{font-size:8px;text-align:center;opacity:.4;line-height:1.4}
+  .pmbar{height:2px;border-radius:1px;width:100%}
+  .pinfo{padding:17px 20px 20px}
+  .pfor{font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+  .hp .pfor{color:var(--her-mid)}
+  .mp .pfor{color:var(--him-mid)}
+  .pname{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:500;letter-spacing:-.3px;margin-bottom:6px;color:var(--white)}
+  .pdesc{font-size:13px;color:var(--tl);line-height:1.55;margin-bottom:14px}
+  .pfooter{display:flex;align-items:center;justify-content:space-between}
+  .pprice{font-size:15px;font-weight:500}
+  .hp .pprice{color:var(--her-1)}
+  .mp .pprice{color:var(--him-1)}
+  .plink{font-size:12px;color:var(--tl);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color .2s}
+  .hp .plink:hover{color:var(--her-1)}
+  .mp .plink:hover{color:var(--him-1)}
+  .plink::after{content:'→';transition:transform .2s}
+  .plink:hover::after{transform:translateX(3px)}
+
+  /* SCENARIOS */
+  .scens{padding:100px 48px;background:var(--black-2)}
+  .sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-top:48px;border-radius:20px;overflow:hidden}
+  .scard{background:var(--black-3);padding:34px 30px;position:relative;overflow:hidden;transition:background .2s}
+  .scard:hover{background:#1C1C1C}
+  .sstripe{position:absolute;bottom:0;left:0;right:0;height:3px}
+  .snum{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:14px}
+  .saction{font-family:'Unbounded',sans-serif;font-size:24px;font-weight:500;letter-spacing:-1px;margin-bottom:6px;line-height:1;color:var(--white)}
+  .strig{font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;color:var(--tl)}
+  .sdesc{font-size:13px;color:var(--tl);line-height:1.6;margin-bottom:18px}
+  .stags{display:flex;gap:6px;flex-wrap:wrap}
+  .stag{font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid rgba(255,255,255,.1);color:var(--tl);letter-spacing:.05em}
+  .stag.h{border-color:rgba(184,222,192,.2);color:var(--her-1)}
+  .stag.m{border-color:rgba(168,196,212,.2);color:var(--him-1)}
+
+  /* WHY */
+  .why{padding:100px 48px}
+  .wgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:48px;border-radius:20px;overflow:hidden}
+  .wcard{background:var(--black-2);padding:30px 26px;transition:background .2s}
+  .wcard:hover{background:#181818}
+  .wicon{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:16px}
+  .wtitle{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:500;letter-spacing:-.3px;margin-bottom:8px}
+  .wtext{font-size:13px;color:var(--tl);line-height:1.6}
+
+  /* CTA */
+  .cta{padding:100px 48px;text-align:center;background:var(--black-2)}
+  .ctitle{font-family:'Unbounded',sans-serif;font-size:clamp(36px,5.5vw,68px);font-weight:700;letter-spacing:-2px;line-height:.95;margin-bottom:20px}
+  .ch{color:var(--her-1)} .cm{color:var(--him-1)}
+  .csub{font-size:15px;color:var(--tl);margin-bottom:40px}
+  .cbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .cbtn{padding:13px 28px;border-radius:40px;font-size:14px;font-weight:500;text-decoration:none;transition:all .2s}
+  .cbtn.h{background:var(--her-1);color:var(--black)}
+  .cbtn.m{background:transparent;border:1px solid var(--him-1);color:var(--him-1)}
+  .cbtn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+
+  footer{padding:52px 48px 32px;border-top:1px solid rgba(255,255,255,.05);display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:40px}
+  .fbrand{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:10px}
+  .ftagline{font-size:13px;color:var(--tl);line-height:1.65}
+  .fct{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tl);margin-bottom:14px}
+  .flinks{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .flinks a{font-size:14px;color:var(--tl);text-decoration:none;transition:color .2s}
+  .flinks a:hover{color:var(--white)}
+  .fbot{padding:16px 48px;border-top:1px solid rgba(255,255,255,.04);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#3A3A3A}
+
+  .fi{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
+  .fi.vis{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="C"></div>
+<div class="cursor-ring" id="R"></div>
+
+<nav>
+  <a href="#" class="logo">Вы<span style="position:relative"><span class="lh">д</span><span class="lm">д</span></span>ох</a>
+  <div class="mode-tabs">
+    <button class="mtab her on" onclick="mode('her')">для неё</button>
+    <button class="mtab him" onclick="mode('him')">для него</button>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#gsplit">Линейки</a></li>
+    <li><a href="#prods">Продукты</a></li>
+    <li><a href="#scens">Сценарии</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hbg"><div class="hgrid"></div><div class="hglow"></div></div>
+  <div class="hcontent">
+    <div class="heyebrow">дневной ритуал свежести</div>
+    <h1 class="htitle">Дневной<br>ритуал.<br><span class="ha">Выдох.</span></h1>
+    <p class="hsub">Жевательные таблетки, спрей и флосс для тех, кто проводит день вне дома. <strong>Для неё. Для него. Без сахара.</strong></p>
+    <div class="hactions">
+      <a href="#gsplit" class="btnp">Выбрать своё</a>
+      <a href="#scens" class="btng">Найти свой момент</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ti">для неё<span class="td tdh"></span>для него<span class="td tdm"></span>без сахара<span class="td tdh"></span>без компромиссов<span class="td tdm"></span>ксилитол и цинк<span class="td tdh"></span>российский бренд<span class="td tdm"></span>4 состояния<span class="td tdh"></span>две линейки<span class="td tdm"></span></div>
+    <div class="ti">для неё<span class="td tdh"></span>для него<span class="td tdm"></span>без сахара<span class="td tdh"></span>без компромиссов<span class="td tdm"></span>ксилитол и цинк<span class="td tdh"></span>российский бренд<span class="td tdm"></span>4 состояния<span class="td tdh"></span>две линейки<span class="td tdm"></span></div>
+  </div>
+</div>
+
+<!-- GENDER SPLIT -->
+<section class="gsplit" id="gsplit">
+
+  <div class="gpanel gher" onclick="goProds('her')">
+    <img class="gher-img" src="she.jpg" alt="">
+    <div class="gfor">для неё</div>
+    <h2 class="gtitle">Свежесть<br>изнутри</h2>
+    <p class="gsub">Кофе, переговорная, обед на бегу. Выдох — первый бренд дневного ухода за полостью рта, который понимает твой ритм.</p>
+    <div class="gpills">
+      <div class="gpill"><div class="gpill-l"><div class="gpill-name">Собраться</div><div class="gpill-trigger">холодная мята + лайм · после кофе</div></div><div class="gpill-price">290 ₽</div></div>
+      <div class="gpill"><div class="gpill-l"><div class="gpill-name">Освежиться</div><div class="gpill-trigger">арбуз + мята · после обеда</div></div><div class="gpill-price">290 ₽</div></div>
+      <div class="gpill"><div class="gpill-l"><div class="gpill-name">Выдохнуть</div><div class="gpill-trigger">белый чай + мята · перед встречей</div></div><div class="gpill-price">290 ₽</div></div>
+    </div>
+    <a href="#prods" class="gcta" onclick="event.stopPropagation();tab('her')">Её линейка</a>
+    <div class="gmocks">
+      <div class="gmock"><div class="gmt" style="color:var(--her-mid)">для неё</div><div class="gmn" style="color:var(--her-1)">Собраться</div><div class="gmb" style="background:var(--her-1)"></div></div>
+      <div class="gmock" style="margin-left:20px"><div class="gmt" style="color:var(--her-mid)">для неё</div><div class="gmn" style="color:var(--her-2)">Освежиться</div><div class="gmb" style="background:var(--her-2)"></div></div>
+      <div class="gmock"><div class="gmt" style="color:var(--her-mid)">для неё</div><div class="gmn" style="color:var(--her-3)">Выдохнуть</div><div class="gmb" style="background:var(--her-3)"></div></div>
+    </div>
+  </div>
+
+  <div class="gpanel ghim" onclick="goProds('him')">
+    <img class="ghim-img" src="he.jpg" alt="">
+    <div class="gfor">для него</div>
+    <h2 class="gtitle">Контроль<br>над днём</h2>
+    <p class="gsub">Переговоры. Перелёты. Решения. Выдох для него — лаконично, уверенно, без лишнего.</p>
+    <div class="gpills">
+      <div class="gpill"><div class="gpill-l"><div class="gpill-name">Собраться</div><div class="gpill-trigger">эвкалипт + мята · утренний ритуал</div></div><div class="gpill-price">290 ₽</div></div>
+      <div class="gpill"><div class="gpill-l"><div class="gpill-name">Освежиться</div><div class="gpill-trigger">цедра + холодная мята · в поездке</div></div><div class="gpill-price">290 ₽</div></div>
+      <div class="gpill"><div class="gpill-l"><div class="gpill-name">Выдохнуть</div><div class="gpill-trigger">кедр + мята · финальные переговоры</div></div><div class="gpill-price">290 ₽</div></div>
+    </div>
+    <a href="#prods" class="gcta" onclick="event.stopPropagation();tab('him')">Его линейка</a>
+    <div class="gmocks">
+      <div class="gmock"><div class="gmt" style="color:var(--him-mid)">для него</div><div class="gmn" style="color:var(--him-1)">Собраться</div><div class="gmb" style="background:var(--him-1)"></div></div>
+      <div class="gmock" style="margin-left:20px"><div class="gmt" style="color:var(--him-mid)">для него</div><div class="gmn" style="color:var(--him-2)">Освежиться</div><div class="gmb" style="background:var(--him-2)"></div></div>
+      <div class="gmock"><div class="gmt" style="color:var(--him-mid)">для него</div><div class="gmn" style="color:var(--him-3)">Выдохнуть</div><div class="gmb" style="background:var(--him-3)"></div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- DIVIDER -->
+<div class="sdiv">
+  <div class="sdl h"></div>
+  <div class="sdb">одна идея · две линейки · разные вкусы</div>
+  <div class="sdl m"></div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="prods fi" id="prods">
+  <div class="prods-hdr">
+    <div>
+      <div class="slabel">продукты</div>
+      <h2 class="stitle">Волна 1 —<br>стартовая линейка</h2>
+    </div>
+    <div class="ptabs">
+      <button class="ptab her on" onclick="tab('her')">для неё</button>
+      <button class="ptab him" onclick="tab('him')">для него</button>
+    </div>
+  </div>
+  <div class="pgrid" id="pg">
+
+    <!-- HER -->
+    <div class="pc hp"><div class="pvis" style="background:linear-gradient(135deg,#0D1610,#172415);overflow:hidden;padding:0"><img src="tablets_1_f.jpg" alt="Собраться" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">таблетки · для неё</div><div class="pname">Собраться</div><div class="pdesc">Холодная мята + лайм. После первого кофе. Ксилитол, без сахара, 30 шт.</div><div class="pfooter"><div class="pprice">от 350 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc hp"><div class="pvis" style="background:linear-gradient(135deg,#0E1811,#1A2C18);overflow:hidden;padding:0"><img src="tablets_2_f.jpg" alt="Освежиться" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">таблетки · для неё</div><div class="pname">Освежиться</div><div class="pdesc">Арбуз + мята. Середина дня, после обеда. Мягкая свежесть без резкости.</div><div class="pfooter"><div class="pprice">от 350 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc hp"><div class="pvis" style="background:linear-gradient(135deg,#0F1A12,#1C2E1A);overflow:hidden;padding:0"><img src="tablets_3_f.jpg" alt="Выдохнуть" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">таблетки · для неё</div><div class="pname">Выдохнуть</div><div class="pdesc">Белый чай + мягкая мята. Перед финальной встречей. Тихая уверенность.</div><div class="pfooter"><div class="pprice">от 350 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc hp"><div class="pvis" style="background:linear-gradient(135deg,#0C1410,#161E14);overflow:hidden;padding:0"><img src="sprei_f.jpg" alt="Здесь и сейчас" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">спрей · для неё</div><div class="pname">Здесь и сейчас</div><div class="pdesc">15 мл, 200 впрыскиваний. В косметичку или карман пальто.</div><div class="pfooter"><div class="pprice">от 330 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc hp"><div class="pvis" style="background:linear-gradient(135deg,#0D1410,#181E15);overflow:hidden;padding:0"><img src="floss_f.jpg" alt="Ощущение уверенности" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">флосс-пики · для неё</div><div class="pname">Ощущение уверенности</div><div class="pdesc">30 флосс-пиков. После обеда в офисе. Рациональный слой ухода.</div><div class="pfooter"><div class="pprice">от 320 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc hp"><div class="pvis" style="background:linear-gradient(135deg,#0E1812,#182816);overflow:hidden;padding:0"><img src="soboi_f.jpg" alt="С собой" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">мини-щётка · для неё</div><div class="pname">С собой</div><div class="pdesc">Портативная мини-щётка со вкусом. 4 шт. в упаковке: мята + лайм, арбуз, белый чай, нейтральная. Без воды и пасты.</div><div class="pfooter"><div class="pprice">от 260 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+    <div class="pc hp" style="border-color:rgba(184,222,192,.12)"><div class="pvis" style="background:linear-gradient(135deg,#0C1610,#14201A);overflow:hidden;padding:0"><img src="product_kit_f.jpg" alt="Её день" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">набор · для неё</div><div class="pname">Её день</div><div class="pdesc">Таблетки ×2 + спрей + флосс. Полный дневной арсенал.</div><div class="pfooter"><div class="pprice">от 990 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <!-- HIM (hidden) -->
+    <div class="pc mp" style="display:none"><div class="pvis" style="background:linear-gradient(135deg,#0C1218,#141E26);overflow:hidden;padding:0"><img src="tablets_1_m.jpg" alt="Собраться" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">таблетки · для него</div><div class="pname">Собраться</div><div class="pdesc">Эвкалипт + мята. Резкий, чистый, бодрящий. Утром и после первого кофе.</div><div class="pfooter"><div class="pprice">от 350 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc mp" style="display:none"><div class="pvis" style="background:linear-gradient(135deg,#0D1420,#162030);overflow:hidden;padding:0"><img src="tablets_2_m.jpg" alt="Освежиться" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">таблетки · для него</div><div class="pname">Освежиться</div><div class="pdesc">Цедра + холодная мята. Поездки, перелёты, длинный день. Мягко и уверенно.</div><div class="pfooter"><div class="pprice">от 350 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc mp" style="display:none"><div class="pvis" style="background:linear-gradient(135deg,#0E1422,#182033);overflow:hidden;padding:0"><img src="tablets_3_m.jpg" alt="Выдохнуть" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">таблетки · для него</div><div class="pname">Выдохнуть</div><div class="pdesc">Кедр + мята. После финального звонка. Завершить день в ресурсе.</div><div class="pfooter"><div class="pprice">от 350 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc mp" style="display:none"><div class="pvis" style="background:linear-gradient(135deg,#0C1018,#141820);overflow:hidden;padding:0"><img src="sprei_m.jpg" alt="Здесь и сейчас" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">спрей · для него</div><div class="pname">Здесь и сейчас</div><div class="pdesc">15 мл, 200 впрыскиваний. В нагрудный карман или пиджак.</div><div class="pfooter"><div class="pprice">от 330 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc mp" style="display:none"><div class="pvis" style="background:linear-gradient(135deg,#0C1018,#141820);overflow:hidden;padding:0"><img src="floss_m.jpg" alt="Ощущение уверенности" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">флосс-пики · для него</div><div class="pname">Ощущение уверенности</div><div class="pdesc">30 флосс-пиков. Быстро, без лишнего. Для тех, кто доводит до конца.</div><div class="pfooter"><div class="pprice">от 320 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+    <div class="pc mp" style="display:none"><div class="pvis" style="background:linear-gradient(135deg,#0C1420,#14203A);overflow:hidden;padding:0"><img src="soboi_m.jpg" alt="С собой" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">мини-щётка · для него</div><div class="pname">С собой</div><div class="pdesc">Портативная мини-щётка со вкусом. 4 шт. в упаковке: эвкалипт, цедра + мята, кедр, нейтральная. Без воды и пасты.</div><div class="pfooter"><div class="pprice">от 260 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+    <div class="pc mp" style="display:none;border-color:rgba(168,196,212,.12)"><div class="pvis" style="background:linear-gradient(135deg,#0C1018,#141820);overflow:hidden;padding:0"><img src="product_kit_m.jpg" alt="Его день" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="pinfo"><div class="pfor">набор · для него</div><div class="pname">Его день</div><div class="pdesc">Таблетки ×2 + спрей + флосс. Всё необходимое.</div><div class="pfooter"><div class="pprice">от 890 ₽</div><a href="#" class="plink">Подробнее</a></div></div></div>
+
+  </div>
+</section>
+
+<!-- SCENARIOS -->
+<section class="scens fi" id="scens">
+  <div class="slabel">состояния</div>
+  <h2 class="stitle">Одни ситуации —<br>разные вкусы</h2>
+  <div class="sgrid">
+    <div class="scard"><div class="sstripe" style="background:linear-gradient(90deg,var(--her-1),var(--him-1))"></div><div class="snum">01</div><div class="saction">Пробуждение</div><div class="strig">Утро · начало дня</div><div class="sdesc">Первый кофе позади. Чистый старт — без следов, без компромиссов.</div><div class="stags"><span class="stag h">мята + лайм (для неё)</span><span class="stag m">эвкалипт + мята (для него)</span></div></div>
+    <div class="scard"><div class="sstripe" style="background:linear-gradient(90deg,var(--her-2),var(--him-2))"></div><div class="snum">02</div><div class="saction">Перед встречей</div><div class="strig">Самый эмоциональный момент</div><div class="sdesc">Не запах — уверенность. Достаёшь из кармана. Три секунды — ты в ресурсе.</div><div class="stags"><span class="stag h">белый чай + мята (для неё)</span><span class="stag m">кедр + мята (для него)</span></div></div>
+    <div class="scard"><div class="sstripe" style="background:linear-gradient(90deg,var(--her-3),var(--him-3))"></div><div class="snum">03</div><div class="saction">В дороге</div><div class="strig">Офис · перелёт · 8–12 часов</div><div class="sdesc">Середина насыщенного дня. Деловая встреча, перелёт или просто долгие переговоры.</div><div class="stags"><span class="stag h">арбуз + мята (для неё)</span><span class="stag m">цедра + мята (для него)</span></div></div>
+    <div class="scard" style="opacity:.7"><div class="sstripe" style="background:#333"></div><div style="position:absolute;top:18px;right:18px;background:rgba(255,255,255,.04);color:var(--tl);font-size:10px;padding:3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.08)">Волна 2</div><div class="snum">04</div><div class="saction" style="color:#777">Перезагрузка</div><div class="strig">Вечер · поздний рейс · корпоратив</div><div class="sdesc">Уголь + цинк + мята. Контекст покупатель додумывает сам — бренд не судит.</div><div class="stags"><span class="stag">уголь + цинк + мята</span><span class="stag">для неё и для него</span></div></div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why fi">
+  <div class="slabel">почему выдох</div>
+  <h2 class="stitle">Не просто<br>освежитель</h2>
+  <div class="wgrid">
+    <div class="wcard"><div class="wicon">✦</div><div class="wtitle">Без сахара</div><div class="wtext">Ксилитол защищает от кариеса. Не разрушает — восстанавливает.</div></div>
+    <div class="wcard"><div class="wicon">◎</div><div class="wtitle">Дневной уход</div><div class="wtext">Ксилитол и цинк — не просто освежение, а полноценный уход между чистками.</div></div>
+    <div class="wcard"><div class="wicon">⬡</div><div class="wtitle">Для неё и него</div><div class="wtext">Две линейки — одна логика. Разные вкусы под разный ритм и характер.</div></div>
+    <div class="wcard"><div class="wicon">◈</div><div class="wtitle">Российский бренд</div><div class="wtext">Первый российский бренд дневного ухода за полостью рта. Создан здесь, для жизни здесь.</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta fi">
+  <h2 class="ctitle">День только<br><span class="ch">начи</span><span class="cm">нается.</span></h2>
+  <p class="csub">Выбери свой набор — таблетки, спрей, флосс</p>
+  <div class="cbtns">
+    <a href="#prods" class="cbtn h" onclick="tab('her')">Набор для неё</a>
+    <a href="#prods" class="cbtn m" onclick="tab('him')">Набор для него</a>
+  </div>
+</section>
+
+<footer>
+  <div><div class="fbrand">Вы<span class="ch">д</span><span class="cm">о</span>х</div><div class="ftagline">Дневной ритуал свежести.<br>Для неё. Для него.<br>Уверенность в каждом моменте.</div></div>
+  <div><div class="fct">Для неё</div><ul class="flinks"><li><a href="#">Собраться</a></li><li><a href="#">Освежиться</a></li><li><a href="#">Выдохнуть</a></li><li><a href="#">Здесь и сейчас (спрей)</a></li><li><a href="#">С собой (мини-щётка)</a></li><li><a href="#">Набор «Её день»</a></li></ul></div>
+  <div><div class="fct">Для неё</div><ul class="flinks"><li><a href="#">Собраться</a></li><li><a href="#">Освежиться</a></li><li><a href="#">Выдохнуть</a></li><li><a href="#">Здесь и сейчас (спрей)</a></li><li><a href="#">С собой (мини-щётка)</a></li><li><a href="#">Набор «Её день»</a></li></ul></div>
+  <div><div class="fct">Для него</div><ul class="flinks"><li><a href="#">Собраться</a></li><li><a href="#">Освежиться</a></li><li><a href="#">Выдохнуть</a></li><li><a href="#">Здесь и сейчас (спрей)</a></li><li><a href="#">С собой (мини-щётка)</a></li><li><a href="#">Набор «Его день»</a></li></ul></div>
+  <div><div class="fct">Купить</div><ul class="flinks"><li><a href="#">Wildberries</a></li><li><a href="#">Ozon</a></li></ul><div class="fct" style="margin-top:22px">О бренде</div><ul class="flinks"><li><a href="#">Наша история</a></li><li><a href="#">Контакты</a></li></ul></div>
+</footer>
+<div class="fbot"><span>© 2026 Выдох. Все права защищены.</span><span>Политика конфиденциальности</span></div>
+
+<script>
+  const C=document.getElementById('C'),R=document.getElementById('R');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+  (function a(){C.style.left=mx+'px';C.style.top=my+'px';rx+=(mx-rx)*.12;ry+=(my-ry)*.12;R.style.left=rx+'px';R.style.top=ry+'px';requestAnimationFrame(a)})();
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{C.style.width='18px';C.style.height='18px';R.style.width='44px';R.style.height='44px'});
+    el.addEventListener('mouseleave',()=>{C.style.width='10px';C.style.height='10px';R.style.width='32px';R.style.height='32px'});
+  });
+
+  let cur='her';
+  function mode(m){
+    cur=m;
+    document.body.classList.toggle('him',m==='him');
+    document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));
+    document.querySelector('.mtab.'+m).classList.add('on');
+    tab(m);
+  }
+  function tab(m){
+    cur=m;
+    document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+    document.querySelector('.ptab.'+m).classList.add('on');
+    document.querySelectorAll('.pc.hp').forEach(c=>c.style.display=m==='her'?'block':'none');
+    document.querySelectorAll('.pc.mp').forEach(c=>c.style.display=m==='him'?'block':'none');
+  }
+  function goProds(m){tab(m);document.getElementById('prods').scrollIntoView({behavior:'smooth'})}
+
+  const obs=new IntersectionObserver(es=>{es.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('vis'),i*80)})},{threshold:.08});
+  document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
